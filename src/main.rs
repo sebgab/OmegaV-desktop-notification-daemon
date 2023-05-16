@@ -1,3 +1,6 @@
+use core::time;
+use std::os::unix::raw::time_t;
+
 use reqwest;
 use serde::Deserialize;
 use serde_json;
@@ -29,10 +32,9 @@ async fn main() -> Result<(), reqwest::Error> {
     // If we get a network error, wait and try again
     if http_response.is_err() {
         println!("Getting the door status failed with error: {:?}", http_response.err());
-        std::thread::sleep(std::time::Duration::new(15, 0));
+        std::thread::sleep(std::time::Duration::new(5, 0));
         continue;
     } 
-    // TODO: Add some retry counting and handling of many re-connections
 
     // Get the result of the http request
     let response = http_response.unwrap();
