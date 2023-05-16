@@ -6,7 +6,6 @@ use notify_rust::Notification;
 #[derive(Debug, Deserialize)]
 struct DoorResponseData {
     open: String,
-    time: i64,
 }
 
 // Querie the OmegaV server to see if the door is open
@@ -70,5 +69,4 @@ async fn main() -> Result<(), reqwest::Error> {
     // Do a check every 15 seconds
     std::thread::sleep(std::time::Duration::new(15, 0));
     }
-    Ok(())
 }
