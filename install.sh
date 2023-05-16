@@ -36,7 +36,7 @@ if ls ~/.local/share/icons/hicolor/200x200/apps/OV.png >/dev/null 2>&1; then
 else
     echo "Adding the OV icon to the xdg list"
     if ! xdg-icon-resource install --novendor OV.png --size 200; then
-        echo "Failed to add OV icon"
+        echo "\033[0;31Failed to add OV icon\033[0m"
         SCRIPT_ERR+=1
     fi
 fi
