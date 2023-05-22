@@ -21,7 +21,6 @@ async fn get_door_data() -> Result<String, reqwest::Error> {
 }
 
 // Notification function
-//#[cfg(target_os = "linux")]
 async fn send_notification(notification_string: &str) {
     // Get the icon path for the notification
     let mut icon_path: String = "".to_string();
