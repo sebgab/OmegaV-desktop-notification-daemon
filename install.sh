@@ -63,9 +63,14 @@ fi
 
 # Take backup of default desktop file
 cp omegav-daemon.desktop omegav-daemon.desktop.default
+
 # Replace the username with the proper user
 username=$(whoami)
-sed -i "s/\$USER/$username/g" omegav-daemon.desktop
+sed -i "s|\$USER|$username|g" omegav-daemon.desktop
+
+# Replace the path with the proper path
+program_path=$(whereis omegav-daemon | awk 'NR==1{print $2}')
+sed -i "s|\$PATH|$program_path|g" omegav-daemon.desktop
 
 # Add the program to the list of installed programs
 if ! xdg-desktop-menu install omegav-daemon.desktop 2>&1; then
