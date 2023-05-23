@@ -68,9 +68,32 @@ username=$(whoami)
 sed -i "s/\$USER/$username/g" omegav-daemon.desktop
 
 # Add the program to the list of installed programs
-xdg-desktop-menu install omegav-daemon.desktop
-# Add it to autostart
-ln -s ~/.local/share/applications/omegav-daemon.desktop ~/.config/autostart
+if ! xdg-desktop-menu install omegav-daemon.desktop 2>&1; then
+	echo -e "\e[31mFailed to add program to the list of desktop programs.\e[0m"
+	SCRIPT_ERR+=1
+fi
+
+# Replace the modified file with the original
+mv omegav-daemon.desktop.default omegav-daemon.desktop
+
+#
+# Autostart
+#
+
+# Check if it already in the list of programs to autostart
+if ls ~/.config/autostart/omegav-daemon.desktop >/dev/null 2>&1; then
+	echo -e "\e[32mProgram is already in list of startup programs\e[0m"
+else
+	# Add the program to autostart
+	read -p "Would you like to start the program at boot? (Y/N): " install_response
+	if [[ $install_response == [yY] || $install_response == [yY][eE][sS] ]]; then
+		echo "Adding the program to the list of startup programs."
+		if ! ln -s ~/.local/share/applications/omegav-daemon.desktop ~/.config/autostart; then
+       			echo -e "\e[31mFailed to add program to list of startup applications\e[0m"
+       			SCRIPT_ERR+=1
+		fi
+	fi
+fi
 
 # Inform the user of the result of the installation.
 echo "Install completed with $SCRIPT_ERR errors."
