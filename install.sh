@@ -1,3 +1,5 @@
+#!/usr/bin/bash
+
 # Create a variable to see if the script ended with an error
 SCRIPT_ERR=0
 
