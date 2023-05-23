@@ -5,7 +5,7 @@ SCRIPT_ERR=0
 
 # Check if the user is running a debian derivative
 if ls /usr/bin/apt >/dev/null 2>&1; then
-    echo "Debian based system detected, automatically installing dependencies"
+    echo "Debian based system detected, automatically installing dependencies."
 
     # Check if they have the depenency installed
     if dpkg -s "libssl-dev" >/dev/null 2>&1; then
@@ -27,7 +27,7 @@ fi
 # Install the program
 if ! cargo install --path .; then
     # If the install failed warn the user
-    echo "\033[0;31Failed to install programm.\033[0m]"
+    echo "\033[0;31Failed to install program.\033[0m]"
     echo "Are you missing the libssl-dev dependency?"
     SCRIPT_ERR+=1
 fi
@@ -43,8 +43,12 @@ else
     fi
 fi
 
-# Add the program to the list of installe programs
-cp omegav-daemon.desktop ~/.local/share/applications/.
+# Replace the username with the proper user
+username=$(whoami)
+sed -i "s/\$USER/$username/g" omegav-daemon.desktop
+
+# Add the program to the list of installed programs
+xdg-desktop-menu install omegav-daemon.desktop
 # Add it to autostart
 ln -s ~/.local/share/applications/omegav-daemon.desktop ~/.config/autostart
 

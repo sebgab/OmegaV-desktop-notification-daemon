@@ -2,6 +2,6 @@
 Type=Application
 Name=omegav-daemon
 Exec=omegav-daemon
-Icon=OV
+Icon=/home/$USER/.local/share/icons/hicolor/200x200/apps/OV.png
 Comment=Notifies you when OmegaV opens or closes
 X-GNOME-Autostart-enabled=true
