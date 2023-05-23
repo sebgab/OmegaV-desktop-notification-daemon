@@ -3,7 +3,17 @@
 # Create a variable to see if the script ended with an error
 SCRIPT_ERR=0
 
-#TODO: Check if rust is installed, and handle that case.
+#
+# Rust install check
+#
+if cargo >/dev/null 2>&1; then
+	echo -e "\e[32mCargo is installed, proceeding with installtion.\e[0m"
+else
+	echo -e "\e[31mRust is not installed.\e[0m"
+	echo -e "\e[31mPlease install it as per the guide on their website.\e[0m"
+	echo -e "\e[31mhttps://www.rust-lang.org/learn/get-started\e[0m"
+	exit 1;
+fi
 
 #
 # Dependency installation
