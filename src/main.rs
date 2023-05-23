@@ -1,5 +1,4 @@
-use core::time;
-use std::os::unix::raw::time_t;
+#![cfg_attr(all(target_os="windows", not(feature = "console"),), windows_subsystem = "windows")]
 
 use reqwest;
 use serde::Deserialize;
@@ -20,6 +19,24 @@ async fn get_door_data() -> Result<String, reqwest::Error> {
 
     Ok(response)
 }
+
+// Notification function
+async fn send_notification(notification_string: &str) {
+    // Get the icon path for the notification
+    let mut icon_path: String = "".to_string();
+    #[cfg(target_os = "linux")] {
+    icon_path = format!("{}/.local/share/icons/hicolor/200x200/apps/OV.png", std::env::var("HOME").expect("Failed to get home directory"));
+    }
+
+    // Fire off the notification
+    Notification::new()
+        .summary(notification_string)
+        .image_path(&icon_path)
+        .timeout(notify_rust::Timeout::Never)
+        .show()
+        .unwrap();
+}
+
 
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
@@ -56,16 +73,8 @@ async fn main() -> Result<(), reqwest::Error> {
             prev_state = door_response.open;
         }
 
-        // Get the icon path for the notification
-        let icon_path = format!("{}/.local/share/icons/hicolor/200x200/apps/OV.png", std::env::var("HOME").expect("Failed to get home directory"));
-
         // Fire off a notification to the user
-        Notification::new()
-            .summary(notification_string)
-            .image_path(&icon_path)
-            .timeout(notify_rust::Timeout::Never)
-            .show()
-            .unwrap();
+        send_notification(notification_string).await;
     }
 
     // Do a check every 15 seconds
