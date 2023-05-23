@@ -1,6 +1,8 @@
 # Create a variable to see if the script ended with an error
 SCRIPT_ERR=0
 
+#TODO: Check if rust is installed, and handle that case.
+
 # Check if the user is running a debian derivative
 if ls /usr/bin/apt >/dev/null 2>&1; then
     echo "Debian based system detected, automatically installing dependencies"
@@ -40,6 +42,11 @@ else
         SCRIPT_ERR+=1
     fi
 fi
+
+# Add the program to the list of installe programs
+cp omegav-daemon.desktop ~/.local/share/applications/.
+# Add it to autostart
+ln -s ~/.local/share/applications/omegav-daemon.desktop ~/.config/autostart
 
 echo "Install completed with $SCRIPT_ERR errors."
 echo "Enjoy!"

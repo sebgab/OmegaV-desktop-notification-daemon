@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=omegav-daemon
+Exec=omegav-daemon
+Icon=OV
+Comment=Notifies you when OmegaV opens or closes
+X-GNOME-Autostart-enabled=true
