@@ -1,4 +1,4 @@
-# OmegaV-dekstop-notification-daemon
+# OmegaV-desktop-notification-daemon
 This is a program that runs in the background and sends a desktop notification whenever the status of the door changes.
 
 ## Why does this exist
@@ -7,15 +7,33 @@ That is how this program was born. By getting a notification every time OV opens
 
 This is just a niche problem, only really relevant to the mornings during the exam period. But I figured that I wasn't the only one who has this issue, and as such decided to share this piece of software I wrote for myself.
 
+## Platform support
+| Platform | Support | Notes |
+| :------- | :------ | :---- |
+| Linux    | Full    |       |
+| Windows  | Partial | It compiles and runs on windows. There is no installer, but there are binaries. |
+| Mac OS   | Partial | Theoretically it should work on Mac OS as well, but I have not tested it. |
+
 ## Installation
-Run the `install.sh` script.
+### Linux
+Linux is the main supported platform, and the only platform with an installer.
+
+The preffered method of installation is to clone the repository and run the `install.sh` script.  
+```bash
+git clone https://github.com/sebgab/OmegaV-desktop-notification-daemon.git
+cd OmegaV-desktop-notification-daemon/
+./install.sh
+```
 
 This script takes care of the entire installation process given you are on Debian, or a Debian based distro.
 If you are not, it will give you a dependency warning, but take care of the rest of the installtion.
 
-### Platform supprot
-| Platform | Support | Notes |
-| :------- | :------ | :---- |
-| Linux    | Full    |       |
-| Windows  | Partial | It compiles and runs for windows, but there are no images. There is no installer either. |
-| Mac OS   | Partial | Theoretically the state should be the same as for Windows, but I have yet to test it. |
+In the future I might compile some AppImages and add them in the releases section.
+
+### Windows
+Windows currently only has partial support. This means that I will fix windows bugs and provide Windows binaries. However, as I don't run windows much the testing on windows is severely limited.
+I do compile windows binaries, and they can be found under the releases tab.
+
+There is no auto-updater, so if you have bugs please update to the newest version, if the bug is still there, please create a git issue.
+
+
