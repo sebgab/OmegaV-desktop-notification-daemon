@@ -23,10 +23,13 @@ async fn get_door_data() -> Result<String, reqwest::Error> {
 
 // Notification function
 async fn send_notification(notification_string: &str) {
-    // Get the icon path for the notification
-    let mut icon_path: String = "".to_string();
+    // Get the icon path for the notification. (Only linux supports icons, so we only get the proper path on linux.)
+    let icon_path;
     #[cfg(target_os = "linux")] {
     icon_path = format!("{}/.local/share/icons/hicolor/200x200/apps/OV.png", std::env::var("HOME").expect("Failed to get home directory"));
+    }
+    #[cfg(not(target_os = "linux"))] {
+    icon_path = "".to_string();
     }
 
     // Fire off the notification
