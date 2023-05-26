@@ -4,6 +4,7 @@ use reqwest;
 use serde::Deserialize;
 use serde_json;
 use notify_rust::Notification;
+use tokio::time::{Duration, Instant};
 
 #[derive(Debug, Deserialize)]
 struct DoorResponseData {
@@ -37,10 +38,21 @@ async fn send_notification(notification_string: &str) {
         .unwrap();
 }
 
-
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
-    let mut prev_state: String = "".to_string();
+    let mut prev_state: String = "".to_string(); // String to store the previous state, used to detect a state change.
+
+    // Quick refresh config
+    let quick_refresh_duration: Duration = Duration::from_secs(60);
+
+    let default_refresh_delay: u64 = 60;
+    let quick_refresh_delay: u64 = 15;
+    let mut refresh_delay: u64 = default_refresh_delay; // The time between API calls
+
+    // Quick refresh stuff
+    let mut quick_refresh_mode: bool = false;
+    let mut quick_refresh_start_time: Instant = Instant::now();
+    let mut quick_refresh_end_time: Instant = Instant::now();
 
     loop {
     // Get the door state
@@ -68,16 +80,30 @@ async fn main() -> Result<(), reqwest::Error> {
         if door_response.open == "1" {
             notification_string = "OmegaV is open!";
             prev_state = door_response.open;
+
+            // Reset quick_refresh stuff
+            quick_refresh_mode = true;                                                      // Enable the quick refresh
+            quick_refresh_start_time = Instant::now();                                      // Set it to start now
+            quick_refresh_end_time = quick_refresh_start_time + quick_refresh_duration;     // Update the end time variable
+            refresh_delay = quick_refresh_delay;                                            // Set the new refresh delay
         } else {
             notification_string = "OmegaV is closed!";
             prev_state = door_response.open;
+
+            quick_refresh_end_time = Instant::now(); // Disable the quick refresh when the door closes
         }
 
         // Fire off a notification to the user
         send_notification(notification_string).await;
     }
 
-    // Do a check every 15 seconds
-    std::thread::sleep(std::time::Duration::new(60, 0));
+    // Sometimes the door quickly opens and closes, to notify people that this is the case the refresh period is shortened after the door opens.
+    if quick_refresh_mode && quick_refresh_start_time <= quick_refresh_end_time {
+        quick_refresh_mode = false;
+        refresh_delay = default_refresh_delay;
+    }
+
+    // Wait for a given period before the next API call
+    std::thread::sleep(std::time::Duration::new(refresh_delay, 0));
     }
 }
