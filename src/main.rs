@@ -78,6 +78,6 @@ async fn main() -> Result<(), reqwest::Error> {
     }
 
     // Do a check every 15 seconds
-    std::thread::sleep(std::time::Duration::new(15, 0));
+    std::thread::sleep(std::time::Duration::new(60, 0));
     }
 }
