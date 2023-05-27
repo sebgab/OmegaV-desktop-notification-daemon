@@ -33,16 +33,23 @@ async fn send_notification(notification_string: &str) {
     }
 
     // Fire off the notification
-    Notification::new()
+    let notification = Notification::new()
         .summary(notification_string)
         .image_path(&icon_path)
         .timeout(notify_rust::Timeout::Never)
-        .show()
-        .unwrap();
+        .show();
+
+
+    match notification {
+        Ok(_) => {}, // Do nothing upon successfully sending a notification
+        Err(e) => {
+            eprintln!("Failed to send notification with error: {:?}", e);
+        }
+    }
 }
 
 #[tokio::main]
-async fn main() -> Result<(), reqwest::Error> {
+async fn main() {
     let mut prev_state: String = "".to_string(); // String to store the previous state, used to detect a state change.
 
     // Quick refresh config
@@ -60,18 +67,25 @@ async fn main() -> Result<(), reqwest::Error> {
     loop {
     // Get the door state
     let http_response = get_door_data().await;
+    let response;
 
-    // If we get a network error, wait and try again
-    if http_response.is_err() {
-        println!("Getting the door status failed with error: {:?}", http_response.err());
-        std::thread::sleep(std::time::Duration::new(5, 0));
-        continue;
-    } 
+    // If the response is ok, store the data. If not skip and retry later.
+    match http_response {
+        Ok(data) => { response = data; },
+        Err(e) => {
+            // If we get a network error, wait and try again
+            eprintln!("Getting the door status failed with error: {:?}", e);
+            std::thread::sleep(std::time::Duration::new(5, 0));
+            continue;
+        }
+    }
 
-    // Get the result of the http request
-    let response = http_response.unwrap();
     // Parse the JSON
-    let door_response: DoorResponseData = serde_json::from_str(&response).unwrap();
+    let door_response: DoorResponseData;
+    match serde_json::from_str(&response) {
+        Ok(response) => { door_response = response; },
+        Err(e) => { eprintln!("Failed to parse door resonse data with error: {:?}", e); continue; }
+    }
 
     // Create a string to hold our output message.
     let notification_string: &str;
