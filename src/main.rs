@@ -61,7 +61,6 @@ async fn main() {
 
     // Quick refresh stuff
     let mut quick_refresh_mode: bool = false;
-    let mut quick_refresh_start_time: Instant = Instant::now();
     let mut quick_refresh_end_time: Instant = Instant::now();
 
     loop {
@@ -100,8 +99,7 @@ async fn main() {
 
             // Reset quick_refresh stuff
             quick_refresh_mode = true;                                                      // Enable the quick refresh
-            quick_refresh_start_time = Instant::now();                                      // Set it to start now
-            quick_refresh_end_time = quick_refresh_start_time + quick_refresh_duration;     // Update the end time variable
+            quick_refresh_end_time = Instant::now() + quick_refresh_duration;               // Update the end time variable
             refresh_delay = quick_refresh_delay;                                            // Set the new refresh delay
         } else {
             notification_string = "OmegaV is closed!";
@@ -115,7 +113,7 @@ async fn main() {
     }
 
     // Sometimes the door quickly opens and closes, to notify people that this is the case the refresh period is shortened after the door opens.
-    if quick_refresh_mode && quick_refresh_start_time <= quick_refresh_end_time {
+    if quick_refresh_mode && Instant::now() >= quick_refresh_end_time {
         quick_refresh_mode = false;
         refresh_delay = default_refresh_delay;
     }
