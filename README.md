@@ -1,6 +1,8 @@
 # OmegaV-desktop-notification-daemon
 This is a program that runs in the background and sends a desktop notification whenever the status of the door changes.
 
+![Image of the plugin sending a notification that the door is open](omegav-daemon-example.gif)
+
 ## Why does this exist
 During the exam period I found myself always missing when OV was open for a bit, it was always open five minutes ago.
 That is how this program was born. By getting a notification every time OV opens, or closes I am able to rush to OV before it closes again.
