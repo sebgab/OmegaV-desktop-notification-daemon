@@ -13,7 +13,7 @@ This is just a niche problem, only really relevant to the mornings during the ex
 | Platform | Support | Notes |
 | :------- | :------ | :---- |
 | Linux    | Full    |       |
-| Windows  | Partial | It compiles and runs on windows. There is no installer, but there are binaries. |
+| Windows  | Partial | It compiles and runs on windows. There is an installer, testing is limited. |
 | Mac OS   | Partial | Theoretically it should work on Mac OS as well, but I have not tested it. |
 
 ## Installation
